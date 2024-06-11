@@ -10,6 +10,7 @@ on:
     #- cron: '30 04 1 * *' # Runs at 04:30 UTC on the 1st every month
     #- cron: '0 8 * * 3' # Checks for updates at 08:00 UTC every Wednesday
     #- cron: '0 6 1 * *' # Builds the app on the 1st of every month at 06:00 UTC
+    - cron: '0 6 1-7 1,3,5,7,9,11 6' # Builds the app on the 1st of every month at 06:00 UTC
 
 env:  
   UPSTREAM_REPO: Artificial-Pancreas/iAPS
@@ -131,7 +132,7 @@ jobs:
     if: | # runs if started manually, or if sync schedule is set and enabled and scheduled on the first Saturday each month, or if sync schedule is set and enabled and new commits were found
         github.event_name == 'workflow_dispatch' ||
         (needs.check_alive_and_permissions.outputs.WORKFLOW_PERMISSION == 'true' &&
-          (vars.SCHEDULED_BUILD != 'false' && github.event.schedule == '0 6 1 * *') ||
+          (vars.SCHEDULED_BUILD != 'false' && github.event.schedule == '0 6 1-7 1,3,5,7,9,11 6') ||
           (vars.SCHEDULED_SYNC == 'true' && needs.check_latest_from_upstream.outputs.NEW_COMMITS == 'true' )
         )
     steps:
